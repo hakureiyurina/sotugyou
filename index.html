@@ -154,8 +154,8 @@
                         <i data-lucide="clock" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">総残り時間</div>
-                        <div id="totalHours" class="text-base font-bold font-mono text-slate-800 dark:text-slate-200">-- 時間</div>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">経過日数 (2026/4/1〜)</div>
+                        <div id="elapsedDays" class="text-base font-bold font-mono text-slate-800 dark:text-slate-200">-- 日</div>
                     </div>
                 </div>
 
@@ -185,7 +185,7 @@
                 <div class="flex justify-between items-center text-xs sm:text-sm font-medium">
                     <span class="text-slate-500 dark:text-slate-400 flex items-center">
                         <i data-lucide="trending-up" class="w-4 h-4 mr-1.5 text-brand-500"></i>
-                        全体進捗状況 (2026年10月 → 2028年3月)
+                        全体進捗状況 (2026年4月1日 → 2028年3月24日)
                     </span>
                     <span id="progressText" class="font-mono font-bold text-brand-600 dark:text-brand-400">0%</span>
                 </div>
@@ -193,7 +193,7 @@
                     <div id="progressBar" class="bg-gradient-to-r from-brand-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 w-0"></div>
                 </div>
                 <div class="flex justify-between text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 pt-1">
-                    <span>計測開始: 2026年10月</span>
+                    <span>開始: 2026年4月1日</span>
                     <span>目標: 2028年3月24日 0:00</span>
                 </div>
             </div>
@@ -225,15 +225,15 @@
     <script>
         // Target Date: March 24, 2028 00:00:00 JST
         const TARGET_DATE = new Date('2028-03-24T00:00:00+09:00');
-        // Baseline Start Date set to October 2026 for calculating progress
-        const START_DATE = new Date('2026-10-01T00:00:00+09:00');
+        // Progress Start Date set to April 1, 2026 00:00:00 JST
+        const START_DATE = new Date('2026-04-01T00:00:00+09:00');
 
         // DOM Element references
         const daysEl = document.getElementById('days');
         const hoursEl = document.getElementById('hours');
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
-        const totalHoursEl = document.getElementById('totalHours');
+        const elapsedDaysEl = document.getElementById('elapsedDays');
         const totalDaysEl = document.getElementById('totalDays');
         const statProgressEl = document.getElementById('statProgress');
         
@@ -275,15 +275,20 @@
             const now = new Date();
             const timeDifference = TARGET_DATE - now;
 
-            // Update Progress Bar Percentage
+            // Update Progress Bar Percentage (From April 1, 2026 to March 24, 2028)
             const totalDuration = TARGET_DATE - START_DATE;
             const elapsed = now - START_DATE;
+            
             let progressPercentage = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
             const formattedProgress = `${progressPercentage.toFixed(2)}%`;
             
             progressBar.style.width = formattedProgress;
             progressText.textContent = formattedProgress;
             statProgressEl.textContent = formattedProgress;
+
+            // Elapsed Days Calculation
+            const elapsedDaysNum = Math.max(0, Math.floor(elapsed / (1000 * 60 * 60 * 24)));
+            elapsedDaysEl.textContent = `${elapsedDaysNum.toLocaleString()} 日`;
 
             // Check if Target Date is reached
             if (timeDifference <= 0) {
@@ -293,7 +298,6 @@
                     hoursEl.textContent = '00';
                     minutesEl.textContent = '00';
                     secondsEl.textContent = '00';
-                    totalHoursEl.textContent = '0 時間';
                     totalDaysEl.textContent = '0 日';
 
                     countdownGrid.classList.add('hidden');
@@ -309,9 +313,6 @@
             const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-            // Calculations for Total Summary
-            const totalHoursNum = Math.floor(timeDifference / (1000 * 60 * 60));
-
             // Render Values with Flip Animation
             const formattedDays = days >= 100 ? days : formatNumber(days);
             updateValueWithAnimation(daysEl, formattedDays);
@@ -320,7 +321,6 @@
             updateValueWithAnimation(secondsEl, formatNumber(seconds));
 
             // Update Statistics Summary
-            totalHoursEl.textContent = `${totalHoursNum.toLocaleString()} 時間`;
             totalDaysEl.textContent = `${days.toLocaleString()} 日`;
         }
 
