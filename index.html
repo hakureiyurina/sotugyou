@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2028年3月24日までのカウントダウン</title>
+    <title>2028年3月24日までのカウントダウン - 拡張版</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -64,6 +64,20 @@
         .animate-flip {
             animation: flipScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        /* Custom scrollbar for milestone list */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.5);
+        }
     </style>
 </head>
 <body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 flex flex-col justify-between overflow-x-hidden selection:bg-brand-500 selection:text-white">
@@ -85,15 +99,21 @@
                 <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-900 via-brand-700 to-slate-700 dark:from-white dark:via-brand-300 dark:to-slate-300 bg-clip-text text-transparent">
                     Target 2028
                 </h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400">Precision Countdown App</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Advanced Precision Countdown</p>
             </div>
         </div>
 
-        <!-- Dark mode toggle -->
-        <button id="themeToggle" class="p-2.5 rounded-2xl glass hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200 text-slate-600 dark:text-slate-300 shadow-sm" aria-label="テーマ切替">
-            <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
-            <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
-        </button>
+        <div class="flex items-center space-x-2">
+            <!-- Sound Toggle Button -->
+            <button id="soundToggle" class="p-2.5 rounded-2xl glass hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200 text-slate-600 dark:text-slate-300 shadow-sm" aria-label="サウンド切替" title="効果音のON/OFF">
+                <i data-lucide="volume-2" id="soundIconOn" class="w-5 h-5"></i>
+            </button>
+            <!-- Dark mode toggle -->
+            <button id="themeToggle" class="p-2.5 rounded-2xl glass hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200 text-slate-600 dark:text-slate-300 shadow-sm" aria-label="テーマ切替">
+                <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+            </button>
+        </div>
     </header>
 
     <!-- Main Content Container -->
@@ -147,7 +167,7 @@
 
             </div>
 
-            <!-- Detail Statistics & Progress Bar -->
+            <!-- Detail Statistics Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
                 <div class="glass rounded-2xl p-4 flex items-center space-x-3 text-left">
                     <div class="p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400">
@@ -174,7 +194,7 @@
                         <i data-lucide="percent" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">達成率</div>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">全体達成率</div>
                         <div id="statProgress" class="text-base font-bold font-mono text-slate-800 dark:text-slate-200">--%</div>
                     </div>
                 </div>
@@ -198,6 +218,86 @@
                 </div>
             </div>
 
+            <!-- Interactive Tabs / Accordion or Feature Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto text-left">
+                
+                <!-- Time Units Breakdown Card -->
+                <div class="glass rounded-3xl p-6 space-y-4 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 text-brand-600 dark:text-brand-400 font-semibold mb-2 text-sm">
+                            <i data-lucide="activity" class="w-4 h-4"></i>
+                            <span>時間換算ビュー</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">残り時間をさまざまな単位で表現します。</p>
+                        
+                        <div class="space-y-3 font-mono text-xs sm:text-sm">
+                            <div class="flex justify-between items-center bg-slate-100/70 dark:bg-slate-900/50 p-2.5 rounded-xl">
+                                <span class="text-slate-500 dark:text-slate-400">総残り時間:</span>
+                                <span id="breakdownHours" class="font-bold text-slate-800 dark:text-slate-200">-- 時間</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-100/70 dark:bg-slate-900/50 p-2.5 rounded-xl">
+                                <span class="text-slate-500 dark:text-slate-400">総残り分:</span>
+                                <span id="breakdownMinutes" class="font-bold text-slate-800 dark:text-slate-200">-- 分</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-100/70 dark:bg-slate-900/50 p-2.5 rounded-xl">
+                                <span class="text-slate-500 dark:text-slate-400">総残り秒:</span>
+                                <span id="breakdownSeconds" class="font-bold text-slate-800 dark:text-slate-200">-- 秒</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motivational Quote Card -->
+                <div class="glass rounded-3xl p-6 space-y-4 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2 text-brand-600 dark:text-brand-400 font-semibold text-sm">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                               <span>今日のモチベーション</span>
+                            </div>
+                            <button onclick="nextQuote()" class="text-xs text-slate-400 hover:text-brand-500 transition-colors flex items-center space-x-1 p-1">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                <span>次へ</span>
+                            </button>
+                        </div>
+                        <div class="bg-slate-100/70 dark:bg-slate-900/50 p-4 rounded-2xl space-y-2 mt-4 min-h-[110px] flex flex-col justify-center">
+                            <p id="quoteText" class="text-xs sm:text-sm italic text-slate-700 dark:text-slate-300">"未来を予測する最善の方法は、それを創り出すことである。"</p>
+                            <p id="quoteAuthor" class="text-[11px] font-semibold text-right text-brand-600 dark:text-brand-400">— ピーター・ドラッカー</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Personal Milestones Section -->
+            <div class="glass rounded-3xl p-6 sm:p-8 max-w-3xl mx-auto text-left space-y-5 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-lg font-bold flex items-center">
+                            <i data-lucide="check-square" class="w-5 h-5 mr-2 text-brand-500"></i>
+                            マイルストーン & 目標チェックリスト
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">2028年までに達成したい計画やタスクを記録しましょう。</p>
+                    </div>
+                    <span id="milestoneCount" class="text-xs font-mono px-3 py-1 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 rounded-full border border-brand-200 dark:border-brand-800/50 self-start sm:self-auto">0/0 完了</span>
+                </div>
+
+                <!-- Add Milestone Form -->
+                <form id="milestoneForm" class="flex gap-2">
+                    <input type="text" id="milestoneInput" placeholder="例: 英語の資格を取得する、資格の勉強を進める..." 
+                           class="flex-grow px-4 py-2.5 rounded-2xl bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-slate-100 placeholder-slate-400">
+                    <button type="submit" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-semibold text-sm shadow-md shadow-brand-500/20 transition-all duration-200 flex items-center space-x-1 shrink-0">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>追加</span>
+                    </button>
+                </form>
+
+                <!-- Milestone List Container -->
+                <div id="milestoneList" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                    <!-- Dynamic Milestones inserted via JS -->
+                </div>
+            </div>
+
             <!-- Celebration Message Container (Hidden by Default) -->
             <div id="celebrationMessage" class="hidden glass glow rounded-3xl p-8 sm:p-12 text-center space-y-4">
                 <div class="inline-flex p-4 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 mb-2">
@@ -209,7 +309,7 @@
                 <p class="text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
                     ついに待ち望んでいたその日を迎えました！特別な瞬間をお祝いしましょう。
                 </p>
-                <button onclick="triggerConfetti()" class="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-brand-500/30 transition-all duration-200">
+                <button onclick="triggerConfettiWithSound()" class="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-brand-500/30 transition-all duration-200">
                     もう一度お祝いする 🎊
                 </button>
             </div>
@@ -219,7 +319,7 @@
 
     <!-- Footer -->
     <footer class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-xs text-slate-400 dark:text-slate-500">
-        <p>© 2028 Target Countdown Application.</p>
+        <p>© 2028 Target Advanced Countdown Application.</p>
     </footer>
 
     <script>
@@ -237,30 +337,156 @@
         const totalDaysEl = document.getElementById('totalDays');
         const statProgressEl = document.getElementById('statProgress');
         
+        const breakdownHoursEl = document.getElementById('breakdownHours');
+        const breakdownMinutesEl = document.getElementById('breakdownMinutes');
+        const breakdownSecondsEl = document.getElementById('breakdownSeconds');
+
         const countdownGrid = document.getElementById('countdownGrid');
         const celebrationMessage = document.getElementById('celebrationMessage');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
         const themeToggle = document.getElementById('themeToggle');
+        const soundToggle = document.getElementById('soundToggle');
+        const soundIconOn = document.getElementById('soundIconOn');
+
+        // Quotes Data
+        const quotes = [
+            { text: "未来を予測する最善の方法は、それを創り出すことである。", author: "ピーター・ドラッカー" },
+            { text: "行動を始める秘訣は、とにかく圧倒されるような大きなタスクを小さく細分化し、最初の1歩を踏み出すことだ。", author: "マーク・トウェイン" },
+            { text: "時間は有限です。だからこそ、誰かの人生を生きて時間を無駄にしてはいけない。", author: "スティーブ・ジョブズ" },
+            { text: "私たちの最大の弱点は諦めることにある。成功する最も確実な方法は、常に「もう一度だけ挑戦してみる」ことだ。", author: "トーマス・エジソン" },
+            { text: "目標とは、締め切りが設定された夢に他ならない。", author: "ナポレオン・ヒル" },
+            { text: "今日できることに全力を注ぎなさい。そうすれば明日はもっと進歩しているだろう。", author: "ピタゴラス" }
+        ];
+        let currentQuoteIndex = 0;
+
+        function nextQuote() {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            document.getElementById('quoteText').textContent = `"${quotes[currentQuoteIndex].text}"`;
+            document.getElementById('quoteAuthor').textContent = `— ${quotes[currentQuoteIndex].author}`;
+            playClickSound();
+        }
+
+        // Web Audio API Sound Effects
+        let soundEnabled = true;
+        function playClickSound() {
+            if (!soundEnabled) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 note
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {}
+        }
+
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled) {
+                soundToggle.classList.remove('opacity-50');
+                soundIconOn.setAttribute('data-lucide', 'volume-2');
+            } else {
+                soundToggle.classList.add('opacity-50');
+                soundIconOn.setAttribute('data-lucide', 'volume-x');
+            }
+            lucide.createIcons();
+            playClickSound();
+        });
+
+        // Personal Milestones / Todo List State
+        let milestones = JSON.parse(localStorage.getItem('target_2028_milestones')) || [
+            { id: 1, text: '2026年内の基礎学習・準備完了', completed: false },
+            { id: 2, text: '中期目標の中間レビュー実施', completed: false },
+            { id: 3, text: '2027年後半の総仕上げ', completed: false }
+        ];
+
+        function saveMilestones() {
+            localStorage.setItem('target_2028_milestones', JSON.stringify(milestones));
+            renderMilestones();
+        }
+
+        function renderMilestones() {
+            const listEl = document.getElementById('milestoneList');
+            const countEl = document.getElementById('milestoneCount');
+            listEl.innerHTML = '';
+
+            const completedCount = milestones.filter(m => m.completed).length;
+            countEl.textContent = `${completedCount}/${milestones.length} 完了`;
+
+            if (milestones.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-slate-400 text-center py-3">マイルストーンがまだありません。目標を追加してみましょう！</p>`;
+                return;
+            }
+
+            milestones.forEach((m, index) => {
+                const item = document.createElement('div');
+                item.className = `flex items-center justify-between p-3 rounded-2xl bg-slate-100/70 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/60 transition-all ${m.completed ? 'opacity-65' : ''}`;
+                
+                item.innerHTML = `
+                    <label class="flex items-center space-x-3 cursor-pointer flex-grow mr-2 select-none">
+                        <input type="checkbox" ${m.completed ? 'checked' : ''} onchange="toggleMilestone(${m.id})" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer">
+                        <span class="text-xs sm:text-sm ${m.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200'}">${escapeHtml(m.text)}</span>
+                    </label>
+                    <button onclick="deleteMilestone(${m.id})" class="text-slate-400 hover:text-rose-500 p-1 transition-colors" title="削除">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                `;
+                listEl.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        function toggleMilestone(id) {
+            milestones = milestones.map(m => m.id === id ? { ...m, completed: !m.completed } : m);
+            saveMilestones();
+            playClickSound();
+        }
+
+        function deleteMilestone(id) {
+            milestones = milestones.filter(m => m.id !== id);
+            saveMilestones();
+            playClickSound();
+        }
+
+        document.getElementById('milestoneForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('milestoneInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            milestones.push({ id: Date.now(), text, completed: false });
+            input.value = '';
+            saveMilestones();
+            playClickSound();
+        });
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
 
         let isCompleted = false;
 
-        // Pad single digit numbers with leading zero
         function formatNumber(num) {
             return num < 10 ? `0${num}` : String(num);
         }
 
-        // Animated value change effect
         function updateValueWithAnimation(element, newValue) {
             if (element.textContent !== String(newValue)) {
                 element.textContent = newValue;
                 element.classList.remove('animate-flip');
-                void element.offsetWidth; // Trigger reflow
+                void element.offsetWidth;
                 element.classList.add('animate-flip');
             }
         }
 
-        // Trigger confetti celebration effect
         function triggerConfetti() {
             if (typeof confetti === 'function') {
                 confetti({
@@ -271,11 +497,16 @@
             }
         }
 
+        function triggerConfettiWithSound() {
+            triggerConfetti();
+            playClickSound();
+        }
+
         function updateCountdown() {
             const now = new Date();
             const timeDifference = TARGET_DATE - now;
 
-            // Update Progress Bar Percentage (From April 1, 2026 to March 24, 2028)
+            // Update Progress Bar Percentage
             const totalDuration = TARGET_DATE - START_DATE;
             const elapsed = now - START_DATE;
             
@@ -322,6 +553,15 @@
 
             // Update Statistics Summary
             totalDaysEl.textContent = `${days.toLocaleString()} 日`;
+
+            // Time breakdown calculations
+            const totalHoursNum = Math.floor(timeDifference / (1000 * 60 * 60));
+            const totalMinutesNum = Math.floor(timeDifference / (1000 * 60));
+            const totalSecondsNum = Math.floor(timeDifference / 1000);
+
+            breakdownHoursEl.textContent = `${totalHoursNum.toLocaleString()} 時間`;
+            breakdownMinutesEl.textContent = `${totalMinutesNum.toLocaleString()} 分`;
+            breakdownSecondsEl.textContent = `${totalSecondsNum.toLocaleString()} 秒`;
         }
 
         // Theme Toggle Logic
@@ -341,12 +581,14 @@
                 document.documentElement.classList.add('dark');
                 localStorage.theme = 'dark';
             }
+            playClickSound();
         });
 
         // Initialize Icons & Timer on Window Load
         window.onload = function () {
             lucide.createIcons();
             initTheme();
+            renderMilestones();
             updateCountdown();
             setInterval(updateCountdown, 1000);
         };
